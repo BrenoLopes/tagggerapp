@@ -2,6 +2,8 @@ package com.balladesh.tagggerapp.main
 
 import com.balladesh.tagggerapp.database.entities.File
 import com.balladesh.tagggerapp.database.entities.Tag
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+import com.fasterxml.jackson.databind.ObjectMapper
 import javafx.application.Application
 import javafx.geometry.Pos
 import javafx.scene.Scene
@@ -31,8 +33,8 @@ class HelloWorldApplication: Application()
 
     val scene = Scene(panel, 450.0, 450.0)
 
-    checkPersistDatabase()
-    checkReadDatabase()
+//    checkPersistDatabase()
+//    checkReadDatabase()
 
     stage.scene = scene
     stage.title = "Hello World"
@@ -42,36 +44,36 @@ class HelloWorldApplication: Application()
     stage.show()
   }
 
-  fun checkPersistDatabase() {
-    val dbfactory = Persistence.createEntityManagerFactory("app.database")
-    val dbmanager = dbfactory.createEntityManager()
-
-    dbmanager.transaction.begin()
-
-    val file = File("ohno.txt", "02/ohno-1231321321.txt")
-
-    val tag = Tag("amongus")
-    file.addTag(tag)
-
-    dbmanager.persist(file)
-
-    dbmanager.transaction.commit()
-    dbmanager.close()
-    dbfactory.close()
-  }
-
-  fun checkReadDatabase() {
-    val dbfactory = Persistence.createEntityManagerFactory("app.database")
-    val dbmanager = dbfactory.createEntityManager()
-
-    val query = dbmanager.createQuery("FROM File f WHERE f.name = :name")
-      .setParameter("name", "ohno.txt")
-    val fileList: List<File> = query.resultList as List<File>
-
-    println("Persisted File: ")
-    println(fileList)
-
-    dbmanager.close()
-    dbfactory.close()
-  }
+//  fun checkPersistDatabase() {
+//    val dbfactory = Persistence.createEntityManagerFactory("app.database")
+//    val dbmanager = dbfactory.createEntityManager()
+//
+//    dbmanager.transaction.begin()
+//
+//    val file = File("ohno.txt", "02/ohno-1231321321.txt")
+//
+//    val tag = Tag("amongus")
+//    file.addTag(tag)
+//
+//    dbmanager.persist(file)
+//
+//    dbmanager.transaction.commit()
+//    dbmanager.close()
+//    dbfactory.close()
+//  }
+//
+//  fun checkReadDatabase() {
+//    val dbfactory = Persistence.createEntityManagerFactory("app.database")
+//    val dbmanager = dbfactory.createEntityManager()
+//
+//    val query = dbmanager.createQuery("FROM File f WHERE f.name = :name")
+//      .setParameter("name", "ohno.txt")
+//    val fileList: List<File> = query.resultList as List<File>
+//
+//    println("Persisted File: ")
+//    println(mapper.writeValueAsString(fileList))
+//
+//    dbmanager.close()
+//    dbfactory.close()
+//  }
 }
