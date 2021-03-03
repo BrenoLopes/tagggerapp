@@ -1,6 +1,7 @@
 package com.balladesh.tagggerapp.main
 
-import com.balladesh.tagggerapp.database.entities.Fruit
+import com.balladesh.tagggerapp.database.entities.File
+import com.balladesh.tagggerapp.database.entities.Tag
 import javafx.application.Application
 import javafx.geometry.Pos
 import javafx.scene.Scene
@@ -47,12 +48,12 @@ class HelloWorldApplication: Application()
 
     dbmanager.transaction.begin()
 
-    val fruit = Fruit()
-    fruit.name = "apple"
-    fruit.colour = "red"
-    fruit.calories = 5
+    val file = File("ohno.txt", "02/ohno-1231321321.txt")
 
-    dbmanager.persist(fruit)
+    val tag = Tag("amongus")
+    file.addTag(tag)
+
+    dbmanager.persist(file)
 
     dbmanager.transaction.commit()
     dbmanager.close()
@@ -63,10 +64,12 @@ class HelloWorldApplication: Application()
     val dbfactory = Persistence.createEntityManagerFactory("app.database")
     val dbmanager = dbfactory.createEntityManager()
 
-    val query = dbmanager.createQuery("from Fruit", Fruit::class.java)
-    val fruits = query.resultList
+    val query = dbmanager.createQuery("FROM File f WHERE f.name = :name")
+      .setParameter("name", "ohno.txt")
+    val fileList: List<File> = query.resultList as List<File>
 
-    println("Fruit table has ${fruits.size} records.")
+    println("Persisted File: ")
+    println(fileList)
 
     dbmanager.close()
     dbfactory.close()

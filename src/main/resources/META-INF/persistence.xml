@@ -6,6 +6,8 @@
   <persistence-unit name="app.database" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <class>com.balladesh.tagggerapp.database.entities.Fruit</class>
+    <class>com.balladesh.tagggerapp.database.entities.File</class>
+    <class>com.balladesh.tagggerapp.database.entities.Tag</class>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
       <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
