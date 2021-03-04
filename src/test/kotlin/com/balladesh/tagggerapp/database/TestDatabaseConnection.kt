@@ -1,5 +1,5 @@
 package com.balladesh.tagggerapp.database
 
-data class DatabaseConnection(
+data class TestDatabaseConnection(
   val persistenceUnitName: String = "test.database"
 )
