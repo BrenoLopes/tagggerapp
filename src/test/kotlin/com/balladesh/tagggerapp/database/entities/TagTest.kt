@@ -25,15 +25,15 @@ internal class TagTest {
 
     val tag = Tag(id, name)
 
-    val files = arrayListOf(
+    val originalFiles = arrayListOf(
       File("file01", "pathfile01"),
       File("file02", "pathfile02")
     )
 
-    val copiedFiles = tag.getFiles()
-    files.add(File("file03", "pathfile03"))
+    val copiedFiles = tag.files
+    originalFiles.add(File("file03", "pathfile03"))
 
-    assertNotEquals(files, copiedFiles)
+    assertNotEquals(originalFiles, copiedFiles)
   }
 
   @Test
@@ -45,10 +45,10 @@ internal class TagTest {
     val tagList = listOf(tag)
 
     // Should also include it in the tag's object
-    file.addTag(tag)
+    file.addTags(tag)
 
-    assertEquals(fileList, tag.getFiles())
-    assertEquals(tagList, file.getTags())
+    assertEquals(fileList, tag.files)
+    assertEquals(tagList, file.tags)
   }
 
   @Test
@@ -56,11 +56,11 @@ internal class TagTest {
     val tag = Tag("Tag01")
     val file = File("file01", "pathtofile01")
 
-    file.addTag(tag)
-    tag.removeFile(file)
+    file.addTags(tag)
+    tag.removeFiles(file)
 
-    assertEquals(emptyList(), tag.getFiles())
-    assertEquals(emptyList(), file.getTags())
+    assertEquals(emptyList(), tag.files)
+    assertEquals(emptyList(), file.tags)
   }
 
   @Test
@@ -68,7 +68,7 @@ internal class TagTest {
     val time = LocalDateTime.now()
     val file = File(1, "file01", "pathfile01", time, mutableListOf())
     val tag = Tag(1, "Tag01")
-    tag.addFile(file)
+    tag.addFiles(file)
 
     val expected = "{\"id\":1,\"name\":\"Tag01\",\"files\":[{\"id\":1,\"name\":\"file01\",\"path\":\"pathfile01\",\"date\":\"$time\"}]}"
     val received = ObjectMapper().writeValueAsString(tag)

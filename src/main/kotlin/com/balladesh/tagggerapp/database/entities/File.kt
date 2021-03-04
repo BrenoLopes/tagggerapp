@@ -40,7 +40,7 @@ class File(): Serializable {
   var date: LocalDateTime = LocalDateTime.now()
 
   /**
-   * The tags associated with this file
+   * Returns the tags associated with this file in an immutable list
    */
   @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.EAGER)
   @JoinTable(
@@ -48,7 +48,9 @@ class File(): Serializable {
     joinColumns = [JoinColumn(name = "file_id", referencedColumnName = "id")],
     inverseJoinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")]
   )
-  private var tags: MutableList<Tag> = arrayListOf()
+  var tags: List<Tag> = emptyList()
+    get() = ArrayList(field)
+    private set
 
   /**
    * Simple constructor for adding a file into the database
@@ -77,42 +79,47 @@ class File(): Serializable {
   }
 
   /**
-   * Returns an immutable copy of all the tags associated with this file
-   */
-  fun getTags(): List<Tag> {
-    return this.tags.toList()
-  }
-
-  /**
    * Adds a tag into this file. This method will also include this object into this tag, unless shouldCascade is set
    * to false.
    *
-   * @param tag The tag to add
+   * @param tags The tags to be added
    * @param shouldCascade Controls if this method should also include this file into the tag's object
    */
-  fun addTag(tag: Tag, shouldCascade: Boolean = true) {
-    if (!this.tags.contains(tag)) {
-      this.tags.add(tag)
-    } else {
-      this.tags[this.tags.indexOf(tag)] = tag
+  fun addTags(vararg tags: Tag, shouldCascade: Boolean = true) {
+    val newTags = ArrayList(this.tags)
+
+    tags.forEach {
+      if (!newTags.contains(it)) {
+        newTags.add(it)
+      } else {
+        newTags[newTags.indexOf(it)] = it
+      }
+
+      if (shouldCascade)
+        it.addFiles(files = arrayOf(this), shouldCascade = false)
     }
 
-    if (shouldCascade)
-      tag.addFile(this, false)
+    this.tags = newTags
   }
 
   /**
    * Remove a tag from this file. This method will also remove this object from this tag, unless shouldCascade is set to
    * false.
    *
-   * @param tag The tag to remove from this file
+   * @param tags The tags to be removed from this file
    * @param shouldCascade Controls if this method should also remove this file from the tag's object
    */
-  fun removeTag(tag: Tag, shouldCascade: Boolean = true) {
-    this.tags.remove(tag)
+  fun removeTags(vararg tags: Tag, shouldCascade: Boolean = true) {
+    val newTags = ArrayList(this.tags)
 
-    if (shouldCascade)
-      tag.removeFile(this, false)
+    tags.forEach {
+      newTags.remove(it)
+
+      if (shouldCascade)
+        it.removeFiles(files = arrayOf(this), shouldCascade = false)
+    }
+
+    this.tags = newTags
   }
 
   override fun equals(other: Any?): Boolean {
