@@ -9,7 +9,11 @@ class PagedResponse<T>(
 
   val totalPages: Int
     get() {
-      val total: Int = if (pageSize == 0) { 1 } else { (totalItems / pageSize).toInt() }
+      val total: Int = if (pageSize == 0) {
+        1
+      } else {
+        ((totalItems - 1) / pageSize).toInt() + 1
+      }
 
       return if (total == 0) { 1 } else { total }
     }
