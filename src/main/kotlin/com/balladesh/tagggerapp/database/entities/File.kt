@@ -42,7 +42,7 @@ class File(): Serializable {
   /**
    * The tags associated with this file
    */
-  @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+  @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.EAGER)
   @JoinTable(
     name = "file_tags",
     joinColumns = [JoinColumn(name = "file_id", referencedColumnName = "id")],

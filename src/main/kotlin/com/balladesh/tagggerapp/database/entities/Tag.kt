@@ -31,8 +31,8 @@ class Tag(): Serializable {
   /**
    * All files associated with this tag
    */
-  @ManyToMany(mappedBy = "tags", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
   private var files: MutableList<File> = mutableListOf()
+  @ManyToMany(mappedBy = "tags", cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.EAGER)
 
   /**
    * Simple constructor to create a tag with a name
