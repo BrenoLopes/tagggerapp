@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
 import java.time.LocalDateTime
+import java.util.*
 import javax.persistence.*
+import kotlin.collections.ArrayList
 import kotlin.jvm.Throws
 
 /**
@@ -132,16 +134,22 @@ class File(): Serializable {
     if (name != other.name) return false
     if (path != other.path) return false
     if (date != other.date) return false
-    if (tags != other.tags) return false
+    if (tags.size != other.tags.size) return false
+
+    for (tags in tags) {
+      for (otherTags in other.tags) {
+        if (tags.id != otherTags.id) return false
+        if (tags.name != otherTags.name) return false
+      }
+    }
 
     return true
   }
 
   override fun hashCode(): Int {
-    var result = name.hashCode()
-    result = 31 * result + path.hashCode()
-    result = 31 * result + date.hashCode()
-    result = 31 * result + tags.hashCode()
+    var result = Objects.hash(id, name, path, date)
+    tags.forEach{ result += Objects.hash(it.id, it.name) }
+
     return result
   }
 

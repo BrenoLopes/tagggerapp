@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonValue
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
+import java.util.*
 import javax.persistence.*
+import kotlin.collections.ArrayList
 import kotlin.jvm.Throws
 
 /**
@@ -100,14 +102,24 @@ class Tag(): Serializable {
 
     if (id != other.id) return false
     if (name != other.name) return false
-    if (files != other.files) return false
+    if (files.size != other.files.size) return false
+
+    for (file in files) {
+      for (otherFile in other.files) {
+        if (file.id != otherFile.id) return false
+        if (file.name != otherFile.name) return false
+        if (file.path != otherFile.path) return false
+        if (file.date != otherFile.date) return false
+      }
+    }
 
     return true
   }
 
   override fun hashCode(): Int {
-    var result = name.hashCode()
-    result = 31 * result + files.hashCode()
+    var result = Objects.hash(id, name)
+    files.forEach{ result += Objects.hash(it.id, it.date, it.name, it.path) }
+
     return result
   }
 
