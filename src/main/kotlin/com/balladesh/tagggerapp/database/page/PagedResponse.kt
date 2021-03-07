@@ -1,12 +1,14 @@
 package com.balladesh.tagggerapp.database.page
 
+import com.balladesh.tagggerapp.database.session.DatabaseSession
+import javax.persistence.Query
+
 class PagedResponse<T>(
   val page: Int,
   val pageSize: Int,
   private val totalItems: Long,
   val itemsList: List<T>
 ) {
-
   val totalPages: Int
     get() {
       val total: Int = if (pageSize == 0) {
@@ -42,5 +44,24 @@ class PagedResponse<T>(
 
   override fun toString(): String {
     return "PagedResponse(page=$page, pageSize=$pageSize, itemsList=$itemsList, totalPages=$totalPages)"
+  }
+}
+
+interface PagedResponseFactory<T> {
+  fun create(dbSession: DatabaseSession, fetchQuery: Query, countQuery: Query, pageable: Pageable): PagedResponse<T>
+}
+
+class DefaultResponseFactory<T>: PagedResponseFactory<T> {
+  override fun create(dbSession: DatabaseSession, fetchQuery: Query, countQuery: Query, pageable: Pageable): PagedResponse<T> {
+    if (pageable.maxSize > 0) {
+      fetchQuery.maxResults = pageable.maxSize
+      fetchQuery.firstResult = if (pageable.page > 0) pageable.page * pageable.maxSize else 0
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    val fileList = fetchQuery.resultList as List<T>
+    val totalOfItems = countQuery.singleResult as Long
+
+    return PagedResponse(pageable.page, pageable.maxSize, totalOfItems, fileList)
   }
 }
