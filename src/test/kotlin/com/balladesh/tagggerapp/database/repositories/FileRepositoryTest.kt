@@ -39,7 +39,7 @@ internal class FileRepositoryTest {
     val file05 = File("file05", "pathfile05", LocalDateTime.now(), arrayListOf())
     val file06 = File("file06", "pathfile06", LocalDateTime.now(), arrayListOf())
 
-    this.testTarget.persistFile(file01, file02, file03, file04, file05, file06)
+    this.testTarget.persistEntities(file01, file02, file03, file04, file05, file06)
 
     val expected = PagedResponse(0, 0, 6, listOf(file01, file02, file03, file04, file05, file06))
     val received = this.testTarget.findAll()
@@ -56,7 +56,7 @@ internal class FileRepositoryTest {
     val file05 = File("file05", "pathfile05", LocalDateTime.now(), arrayListOf())
     val file06 = File("file06", "pathfile06", LocalDateTime.now(), arrayListOf())
 
-    this.testTarget.persistFile(file01, file02, file03, file04, file05, file06)
+    this.testTarget.persistEntities(file01, file02, file03, file04, file05, file06)
 
     val expectedResponse = PagedResponse(
       0,
@@ -82,7 +82,7 @@ internal class FileRepositoryTest {
     val file05 = File("file05", "pathfile05", LocalDateTime.now(), arrayListOf())
     val file06 = File("file06", "pathfile06", LocalDateTime.now(), arrayListOf())
 
-    this.testTarget.persistFile(file01, file02, file03, file04, file05, file06)
+    this.testTarget.persistEntities(file01, file02, file03, file04, file05, file06)
 
     val expectedResponse = PagedResponse(
       1,
@@ -108,7 +108,7 @@ internal class FileRepositoryTest {
     val file05 = File("file05", "pathfile05", LocalDateTime.now(), arrayListOf())
     val file06 = File("file06", "pathfile06", LocalDateTime.now(), arrayListOf())
 
-    this.testTarget.persistFile(file01, file02, file03, file04, file05, file06)
+    this.testTarget.persistEntities(file01, file02, file03, file04, file05, file06)
 
     val expectedResponse = PagedResponse(
       0,
@@ -128,7 +128,7 @@ internal class FileRepositoryTest {
   @Test
   fun testSearchById() {
     val expectedFile = File("file01", "pathfile01", LocalDateTime.now(), arrayListOf())
-    this.testTarget.persistFile(expectedFile)
+    this.testTarget.persistEntities(expectedFile)
 
     val receivedFile = this.testTarget.findById(expectedFile.id)
       .orElseThrow { NoResultException::class.java.newInstance() }
@@ -141,7 +141,7 @@ internal class FileRepositoryTest {
     val file01 = File("file01", "pathfile01", LocalDateTime.now(), arrayListOf())
     val file02 = File("file01", "pathfile02", LocalDateTime.now(), arrayListOf())
 
-    this.testTarget.persistFile(file01, file02)
+    this.testTarget.persistEntities(file01, file02)
 
     val expected = PagedResponse(
       0,
@@ -159,7 +159,7 @@ internal class FileRepositoryTest {
     val file01 = File("file01", "pathfile01", LocalDateTime.now(), arrayListOf())
     val file02 = File("file01", "pathfile02", LocalDateTime.now(), arrayListOf())
 
-    this.testTarget.persistFile(file01, file02)
+    this.testTarget.persistEntities(file01, file02)
 
     val expected = PagedResponse(
       0,
@@ -180,7 +180,7 @@ internal class FileRepositoryTest {
     val file02 = File("file02", "path02")
 
     tag.addFiles(file01, file02)
-    testTarget.persistFile(file01, file02)
+    testTarget.persistEntities(file01, file02)
 
     val expected = PagedResponse(0, 0, 2, listOf(file01, file02))
 
@@ -192,10 +192,10 @@ internal class FileRepositoryTest {
   @Test
   fun testUpdate() {
     val file01 = File("file01", "path01")
-    testTarget.persistFile(file01)
+    testTarget.persistEntities(file01)
 
     file01.name = "editedfile01"
-    testTarget.updateFile(file01)
+    testTarget.updateEntities(file01)
 
     val received = testTarget.findById(file01.id).orElseThrow { ComparisonFailure::class.java.newInstance() }
 
@@ -207,8 +207,8 @@ internal class FileRepositoryTest {
     val file01 = File("file01", "path01")
     val file02 = File("file02", "path02")
 
-    testTarget.persistFile(file01, file02)
-    testTarget.removeFile(file01, file02)
+    testTarget.persistEntities(file01, file02)
+    testTarget.removeEntities(file01, file02)
 
     val expected = PagedResponse<File>(0, 0, 0, emptyList())
     val received = testTarget.findAll()
