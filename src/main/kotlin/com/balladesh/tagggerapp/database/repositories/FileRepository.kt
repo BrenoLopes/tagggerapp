@@ -9,7 +9,6 @@ import java.util.Optional
 import javax.persistence.EntityExistsException
 import javax.persistence.EntityTransaction
 import javax.persistence.NoResultException
-import javax.transaction.Transaction
 
 class FileRepository(private val responseFactory: PagedResponseFactory<File> = DefaultResponseFactory()) {
   private var databaseSessionBuilder: DatabaseSessionBuilder
