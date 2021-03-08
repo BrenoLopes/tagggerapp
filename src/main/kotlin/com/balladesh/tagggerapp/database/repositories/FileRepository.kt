@@ -115,6 +115,14 @@ class FileRepository(private val responseFactory: PagedResponseFactory<File> = D
     }
   }
 
+  /**
+   * Persist a file in the database
+   *
+   * @param entities the files to be used in the search
+   *
+   * @throws EntityExistsException if the entity already exists
+   * @throws RuntimeException if an error happened during the persistence
+   */
   override fun persistEntities(vararg entities: File) {
     val databaseSession = this.databaseSessionBuilder.build()
     val transaction = databaseSession.manager.transaction
